@@ -1,0 +1,64 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:maui.boozer.Controls"
+             x:Class="maui.boozer.MainPage">
+
+    <ScrollView>
+        <VerticalStackLayout
+            Padding="30,0"
+            Spacing="25">
+            <Image
+                Source="title.jpg"
+                HeightRequest="185"
+                Aspect="AspectFit"
+                SemanticProperties.Description="" />
+
+            <!--<Label
+                Text="Hello, World!"
+                Style="{StaticResource Headline}"
+                SemanticProperties.HeadingLevel="Level1" />-->
+
+            <!--<Label
+                Text="Welcome to &#10;.NET Multi-platform App UI"
+                Style="{StaticResource SubHeadline}"
+                SemanticProperties.HeadingLevel="Level2"
+                SemanticProperties.Description="Welcome to dot net Multi platform App U I" />-->
+
+            <!--<Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="0.75*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <Frame>
+                    <Label Grid.Row="0"  Grid.Column="0" Text="0.33" FontSize="Title" HorizontalTextAlignment="End" VerticalTextAlignment="Center" Padding="10"></Label>
+                </Frame>
+                <controls:StepperView Grid.Row="0"  Grid.Column="1"></controls:StepperView>
+
+                --><!--<Label Grid.Row="1"  Grid.Column="0" Text="0.5" FontSize="Title" HorizontalTextAlignment="End" VerticalTextAlignment="Center" Padding="10"></Label>
+                <controls:StepperView Grid.Row="1"  Grid.Column="1"></controls:StepperView>
+
+                <Label Grid.Row="2"  Grid.Column="0" Text="1.0" FontSize="Title" HorizontalTextAlignment="End" VerticalTextAlignment="Center" Padding="10"></Label>
+                <controls:StepperView Grid.Row="2"  Grid.Column="1"></controls:StepperView>
+
+                <Label Grid.Row="3"  Grid.Column="0" Text="1.5" FontSize="Title" HorizontalTextAlignment="End" VerticalTextAlignment="Center" Padding="10"></Label>
+                <controls:StepperView Grid.Row="3"  Grid.Column="1"></controls:StepperView>--><!--
+            </Grid>-->
+
+            <Button
+                x:Name="CounterBtn"
+                Text="Внести" 
+                SemanticProperties.Hint="Counts the number of times you click"
+                Clicked="OnCounterClicked"
+                HorizontalOptions="Fill" />
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>
