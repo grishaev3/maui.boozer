@@ -2,21 +2,16 @@
 {
     public partial class MainPage : ContentPage
     {
-        int count = 0;
-
         public MainPage()
         {
             InitializeComponent();
         }
 
-        private void OnCounterClicked(object sender, EventArgs e)
+        private void OnApplyClicked(object sender, EventArgs e)
         {
-            count++;
-
-            if (count == 1)
-                CounterBtn.Text = $"Clicked {count} time";
-            else
-                CounterBtn.Text = $"Clicked {count} times";
+            decimal value = (Decimal)(A.Value * 0.33 + B.Value * 0.5 + C.Value * 1.0 + D.Value * 1.5);
+            
+            ((Button)sender).Text = $"Внесено {value} л.";
         }
     }
 }

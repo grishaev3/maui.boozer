@@ -5,9 +5,9 @@
              x:Class="maui.boozer.Controls.StepperView">
     <Frame BindingContext="">
         <HorizontalStackLayout BindingContext="{x:Reference this}">
-            <Button Text="+" Margin="10" Clicked="OnPlusButtonClicked"></Button>
-            <Label  Text="{Binding Value}" FontSize="Medium" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" Margin="10" ></Label>
             <Button Text="-" Margin="10" Clicked="OnMinusButtonClicked"></Button>
+            <Label  Text="{Binding Value}" FontSize="Medium" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" Margin="10" ></Label>
+            <Button Text="+" Margin="10" Clicked="OnPlusButtonClicked"></Button>
         </HorizontalStackLayout>
     </Frame>
 </ContentView>
