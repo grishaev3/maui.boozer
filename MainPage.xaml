@@ -14,6 +14,8 @@
                 Aspect="AspectFit"
                 SemanticProperties.Description="" />
 
+            <Label WidthRequest="200" Text="{Binding Tooday}" BackgroundColor="Red" />
+
             <!--<Label
                 Text="Hello, World!"
                 Style="{StaticResource Headline}"
@@ -56,6 +58,20 @@
                 SemanticProperties.Hint="Counts the number of times you click"
                 Clicked="OnApplyClicked"
                 HorizontalOptions="Fill" />
+
+            <CollectionView ItemsSource="{Binding Shots}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <StackLayout Orientation="Horizontal">
+                            <Label WidthRequest="160" Text="{Binding Date}" BackgroundColor="Blue" />
+                            <Label WidthRequest="80" Text="{Binding ThirdLitterCount}" BackgroundColor="ForestGreen" />
+                            <Label WidthRequest="80" Text="{Binding HalfLitterCount}" BackgroundColor="ForestGreen"/>
+                            <Label WidthRequest="80" Text="{Binding OneLitterCount}" BackgroundColor="ForestGreen" />
+                            <Label WidthRequest="80" Text="{Binding OneAndHalfLitterCount}" BackgroundColor="ForestGreen" />
+                        </StackLayout>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
         </VerticalStackLayout>
     </ScrollView>
 
