@@ -3,11 +3,11 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Name="this"
              x:Class="maui.boozer.Controls.StepperView">
-    <Frame>
+    <Frame Padding="10">
         <HorizontalStackLayout BindingContext="{x:Reference this}">
-            <Button Text="-" Margin="10" Clicked="OnMinusButtonClicked"></Button>
-            <Label  Text="{Binding Value}" FontSize="Medium" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" Margin="10" ></Label>
-            <Button Text="+" Margin="10" Clicked="OnPlusButtonClicked"></Button>
+            <Button Text="-" Margin="5" Clicked="OnMinusButtonClicked"></Button>
+            <Label  Text="{Binding Value}" FontSize="Medium" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" Margin="3"/>
+            <Button Text="+" Margin="5" Clicked="OnPlusButtonClicked"></Button>
         </HorizontalStackLayout>
     </Frame>
 </ContentView>

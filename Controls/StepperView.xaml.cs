@@ -8,8 +8,8 @@ public partial class StepperView : ContentView
 
     public int Value
     {
-        get => (int)GetValue(StepperView.ValueProperty);
-        set => SetValue(StepperView.ValueProperty, value);
+        get => (int)GetValue(ValueProperty);
+        set => SetValue(ValueProperty, value);
     }
 
     public StepperView()
