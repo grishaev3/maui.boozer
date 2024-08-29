@@ -6,8 +6,8 @@
 
     <ScrollView>
         <VerticalStackLayout
-            Padding="30,0"
-            Spacing="25">
+            Padding="10,0"
+            Spacing="20">
             <Image
                 Source="title.jpg"
                 HeightRequest="185"
@@ -29,9 +29,9 @@
 
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="0.45*" />
+                    <ColumnDefinition Width="0.20*" />
                     <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="0.45*" />
+                    <ColumnDefinition Width="0.25*" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
@@ -40,17 +40,17 @@
                 </Grid.RowDefinitions>
 
                 <!--"left, top, right, bottom"-->
-                <Label Grid.Row="0"  Grid.Column="0" Text="0.5~" FontSize="Title" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" Padding="0,10,0,10"/>
-                <controls:StepperView Grid.Row="0"  Grid.Column="1" x:Name="B"/>
+                <Label Grid.Row="0"  Grid.Column="0" Text="0.5" FontSize="Medium" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" Padding="0,5,0,5"/>
+                <controls:StepperView Grid.Row="0"  Grid.Column="1" x:Name="B" HorizontalOptions="Center" />
 
-                <Label Grid.Row="0"  Grid.Column="2" Text="1.0~" FontSize="Title" HorizontalTextAlignment="End" VerticalTextAlignment="Center" Padding="10"/>
-                <controls:StepperView Grid.Row="0"  Grid.Column="3" x:Name="C" />
+                <Label Grid.Row="0"  Grid.Column="2" Text="1.0" FontSize="Medium" HorizontalTextAlignment="End" VerticalTextAlignment="Center" Padding="5"/>
+                <controls:StepperView Grid.Row="0"  Grid.Column="3" x:Name="C" HorizontalOptions="Center" />
 
-                <Label Grid.Row="1"  Grid.Column="0" Text="0.3~" FontSize="Title" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" Padding="0,10,0,10"/>
-                <controls:StepperView Grid.Row="1"  Grid.Column="1" x:Name="A"/>
+                <Label Grid.Row="1"  Grid.Column="0" Text="0.3" FontSize="Medium" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" Padding="0,5,0,5"/>
+                <controls:StepperView Grid.Row="1"  Grid.Column="1" x:Name="A" HorizontalOptions="Center"/>
 
-                <Label Grid.Row="1"  Grid.Column="2" Text="1.5~" FontSize="Title" HorizontalTextAlignment="End" VerticalTextAlignment="Center" Padding="10"/>
-                <controls:StepperView x:Name="D" Grid.Row="1"  Grid.Column="3"/>
+                <Label Grid.Row="1"  Grid.Column="2" Text="1.5" FontSize="Medium" HorizontalTextAlignment="End" VerticalTextAlignment="Center" Padding="5"/>
+                <controls:StepperView x:Name="D" Grid.Row="1"  Grid.Column="3" HorizontalOptions="Center"/>
             </Grid>
 
             <Button
@@ -63,12 +63,12 @@
             <CollectionView ItemsSource="{Binding ShotsCollection}">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <StackLayout Orientation="Horizontal" Spacing="5" Padding="5" >
-                            <Label WidthRequest="175" Text="{Binding Date, StringFormat='{0:dd.MM.yy HH:mm}'}" BackgroundColor="Blue" VerticalTextAlignment="Center" Padding="5,0,0,0"  />
-                            <Label WidthRequest="50" Text="{Binding ThirdLitter}" BackgroundColor="ForestGreen" VerticalTextAlignment="Center" HorizontalTextAlignment="Center"/>
-                            <Label WidthRequest="50" Text="{Binding HalfLitter}" BackgroundColor="ForestGreen" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" />
-                            <Label WidthRequest="50" Text="{Binding OneLitter}" BackgroundColor="ForestGreen" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" />
-                            <Label WidthRequest="50" Text="{Binding OneAndHalfLitter}" BackgroundColor="ForestGreen" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" />
+                        <StackLayout Orientation="Horizontal" Spacing="5" Padding="5" HorizontalOptions="CenterAndExpand" >
+                            <Label WidthRequest="120" Text="{Binding Date, StringFormat='{0:dd.MM.yy HH:mm}'}" BackgroundColor="Blue" VerticalTextAlignment="Center" Padding="5,0,0,0"  />
+                            <Label WidthRequest="44" Text="{Binding ThirdLitter}" BackgroundColor="ForestGreen" VerticalTextAlignment="Center" HorizontalTextAlignment="Center"/>
+                            <Label WidthRequest="44" Text="{Binding HalfLitter}" BackgroundColor="ForestGreen" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" />
+                            <Label WidthRequest="44" Text="{Binding OneLitter}" BackgroundColor="ForestGreen" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" />
+                            <Label WidthRequest="44" Text="{Binding OneAndHalfLitter}" BackgroundColor="ForestGreen" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" />
                             <Button Text="X" TextColor="Red" BackgroundColor="Gray" Clicked="OnDeleteClicked" BorderWidth="1"></Button>
                         </StackLayout>
                     </DataTemplate>
