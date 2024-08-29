@@ -1,6 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using System.Text.Json;
 using maui.boozer.Model;
+using maui.boozer.Services;
 
 namespace maui.boozer
 {
@@ -8,6 +9,8 @@ namespace maui.boozer
     {
         private string _storageFileName = "shots.json";
         private string _storagePath => Path.Combine(FileSystem.AppDataDirectory, _storageFileName);
+
+        private readonly IDataStorageService _dataStorage;
 
         public static readonly BindableProperty ToodayProperty = BindableProperty.Create(nameof(Tooday), typeof(decimal), typeof(MainPage));
         public decimal Tooday
@@ -18,58 +21,22 @@ namespace maui.boozer
 
         public ObservableCollection<Shot> ShotsCollection { get; private set; }
 
-        public MainPage()
+        public MainPage(IDataStorageService dataStorage)
         {
             InitializeComponent();
+
+            _dataStorage = dataStorage;
 
             LoadData();
         }
 
         private async void LoadData()
         {
-            ShotsCollection = await LoadShotsAsync(_storagePath);
+            ShotsCollection = await _dataStorage.LoadShotsAsync(_storagePath);
 
             UpdateToodayProperty(ShotsCollection);
 
             BindingContext = this;
-        }
-
-        public static async Task<ObservableCollection<Shot>> LoadShotsAsync(string filePath)
-        {
-            if (!File.Exists(filePath))
-            {
-                return [];
-            }
-
-            // C:\Users\{current_user}\AppData\Local\Packages\com.companyname.maui.boozer_9zz4h110yvjzm\LocalState\shots.json
-            string jsonString = await File.ReadAllTextAsync(filePath);
-
-            ObservableCollection<Shot>? result = null;
-            try
-            {
-                result = JsonSerializer.Deserialize<ObservableCollection<Shot>>(jsonString);
-            }
-            catch
-            {
-                File.Delete(filePath);
-                return [];
-            }
-
-            if (result == null)
-            {
-                throw new Exception("Deserialize error");
-            }
-            else
-            {
-                return new ObservableCollection<Shot>(result);
-            }
-        }
-
-        public static async Task SaveShotsAsync(ObservableCollection<Shot> shots, string filePath)
-        {
-            string jsonString = JsonSerializer.Serialize(shots);
-
-            await File.WriteAllTextAsync(filePath, jsonString);
         }
 
         private async void OnApplyClicked(object sender, EventArgs e)
@@ -95,7 +62,7 @@ namespace maui.boozer
 
             try
             {
-                await MainPage.SaveShotsAsync(ShotsCollection, _storagePath);
+                await _dataStorage.SaveShotsAsync(ShotsCollection, _storagePath);
 
                 ((Button)sender).Text = $"Внесено {value} л.";
 
@@ -125,7 +92,7 @@ namespace maui.boozer
 
                 UpdateToodayProperty(ShotsCollection);
 
-                await MainPage.SaveShotsAsync(ShotsCollection, _storagePath);
+                await _dataStorage.SaveShotsAsync(ShotsCollection, _storagePath);
             }
         }
 

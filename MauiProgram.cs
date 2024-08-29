@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using maui.boozer.Services;
+using Microsoft.Extensions.Logging;
 using Microsoft.Maui.LifecycleEvents;
 #if WINDOWS
 using Microsoft.UI;
@@ -50,6 +51,8 @@ namespace maui.boozer
                 });
             });
 #endif     
+            builder.Services.AddSingleton<IDataStorageService, DataStorageService>();
+            builder.Services.AddSingleton<MainPage>();
 
             return builder.Build();
         }
