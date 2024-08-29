@@ -14,7 +14,16 @@
                 Aspect="AspectFit"
                 SemanticProperties.Description="" />
 
-            <Label WidthRequest="200" Text="{Binding Tooday, StringFormat='Выпито за сегодня: {0}~'}" BackgroundColor="Red" />
+            <!--<Label WidthRequest="200" Text="{Binding TotalPerDay, StringFormat='Выпито за {0}: {1}~'}" BackgroundColor="Red" />-->
+
+            <Label HorizontalTextAlignment="Center" BackgroundColor="Red">
+                <Label.Text>
+                    <MultiBinding StringFormat="{}Выпито за {0}: {1}~">
+                        <Binding Path="Day" />
+                        <Binding Path="TotalPerDay" />
+                    </MultiBinding>
+                </Label.Text>
+            </Label>
 
             <!--<Label
                 Text="Hello, World!"
@@ -60,7 +69,7 @@
                 Clicked="OnApplyClicked"
                 HorizontalOptions="Fill" />
 
-            <CollectionView ItemsSource="{Binding ShotsCollection}">
+            <CollectionView ItemsSource="{Binding FilteredShotsCollection, Mode=TwoWay}">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <StackLayout Orientation="Horizontal" Spacing="5" Padding="5" HorizontalOptions="CenterAndExpand" >
@@ -75,7 +84,10 @@
                 </CollectionView.ItemTemplate>
             </CollectionView>
 
-            <!--<DatePicker MinimumDate="08/01/2024" DateSelected="DatePicker_DateSelected" />-->
+            <HorizontalStackLayout HorizontalOptions="Center">
+                <DatePicker MinimumDate="01/01/2024" DateSelected="OnDateSelected" HorizontalOptions="Center" />
+                <Button Text="Последние 10" Clicked="OnLast10Clicked"></Button>
+            </HorizontalStackLayout>
 
         </VerticalStackLayout>
     </ScrollView>

@@ -1,25 +1,33 @@
-﻿using System.Collections.ObjectModel;
-using System.Text.Json;
-using maui.boozer.Model;
+﻿using maui.boozer.Model;
 using maui.boozer.Services;
+using System.Collections.ObjectModel;
 
 namespace maui.boozer
 {
     public partial class MainPage : ContentPage
     {
-        private string _storageFileName = "shots.json";
+        private const string _storageFileName = "shots.json";
         private string _storagePath => Path.Combine(FileSystem.AppDataDirectory, _storageFileName);
 
         private readonly IDataStorageService _dataStorage;
 
-        public static readonly BindableProperty ToodayProperty = BindableProperty.Create(nameof(Tooday), typeof(decimal), typeof(MainPage));
-        public decimal Tooday
+        public static readonly BindableProperty TotalPerDayProperty = BindableProperty.Create(nameof(TotalPerDay), typeof(decimal), typeof(MainPage));
+        public decimal TotalPerDay
         {
-            get => (decimal)GetValue(ToodayProperty);
-            set => SetValue(ToodayProperty, value);
+            get => (decimal)GetValue(TotalPerDayProperty);
+            set => SetValue(TotalPerDayProperty, value);
+        }
+
+        public static readonly BindableProperty TotalDayProperty = BindableProperty.Create(nameof(Day), typeof(string), typeof(MainPage));
+        public string Day 
+        {
+            get => (string)GetValue(TotalDayProperty);
+            set  => SetValue(TotalDayProperty, value);
         }
 
         public ObservableCollection<Shot> ShotsCollection { get; private set; }
+
+        public ObservableCollection<Shot> FilteredShotsCollection { get; private set; }
 
         public MainPage(IDataStorageService dataStorage)
         {
@@ -34,7 +42,7 @@ namespace maui.boozer
         {
             ShotsCollection = await _dataStorage.LoadShotsAsync(_storagePath);
 
-            UpdateToodayProperty(ShotsCollection);
+            OnLast10ClickedImpl();
 
             BindingContext = this;
         }
@@ -49,16 +57,18 @@ namespace maui.boozer
                 return;
             }
 
-            ShotsCollection.Add(new Shot
+            Shot item = new()
             {
                 Date = DateTime.Now,
                 ThirdLitterCount = A.Value,
                 HalfLitterCount = B.Value,
                 OneLitterCount = C.Value,
                 OneAndHalfLitterCount = D.Value
-            });
+            };
+            ShotsCollection.Add(item);
+            OnDateSelectedImpl(DateTime.Now.Date);
 
-            UpdateToodayProperty(ShotsCollection);
+            UpdateTotalPerDayProperties(ShotsCollection);
 
             try
             {
@@ -85,31 +95,62 @@ namespace maui.boozer
 
             var shot = (Shot)((Button)sender).BindingContext;
 
-            var item = ShotsCollection.FirstOrDefault(e => e.ID == shot.ID);
-            if (item != null)
+            var item = ShotsCollection.Single(e => e.ID == shot.ID);
+            var filteredItem = FilteredShotsCollection.Single(e => e.ID == shot.ID);
+
+            ShotsCollection.Remove(item);
+            FilteredShotsCollection.Remove(filteredItem);
+
+            UpdateTotalPerDayProperties(ShotsCollection);
+
+            await _dataStorage.SaveShotsAsync(ShotsCollection, _storagePath);
+        }
+
+        private void OnLast10Clicked(object sender, EventArgs e)
+        {
+            OnLast10ClickedImpl();
+        }
+        private void OnLast10ClickedImpl()
+        {
+            IEnumerable<Shot> filtered = ShotsCollection.Take(10);
+            FilteredShotsCollection = new ObservableCollection<Shot>(filtered);
+
+            UpdateTotalPerDayProperties(FilteredShotsCollection);
+            OnPropertyChanged(nameof(FilteredShotsCollection));
+        }
+
+        private void OnDateSelected(object sender, DateChangedEventArgs e)
+        {
+            OnDateSelectedImpl(e.NewDate.Date);
+        }
+        private void OnDateSelectedImpl(DateTime day)
+        {
+            IEnumerable<Shot> filtered = ShotsCollection.Where(p => p.Date.Date == day);
+            FilteredShotsCollection = new ObservableCollection<Shot>(filtered);
+
+            UpdateTotalPerDayProperties(FilteredShotsCollection, day);
+            OnPropertyChanged(nameof(FilteredShotsCollection));
+        }
+
+        private void UpdateTotalPerDayProperties(ObservableCollection<Shot> shots, DateTime day = default)
+        {
+            if (day == default || day == DateTime.Now.Date)
             {
-                ShotsCollection.Remove(item);
-
-                UpdateToodayProperty(ShotsCollection);
-
-                await _dataStorage.SaveShotsAsync(ShotsCollection, _storagePath);
+                day = DateTime.Now.Date;
+                Day = "сегодня";
             }
-        }
+            else
+            {
+                Day = day.ToString("dd.MM.yy ddd");
+            }
 
-        private void DatePicker_DateSelected(object sender, DateChangedEventArgs e)
-        {
-            // TODO:
-        }
-
-        private void UpdateToodayProperty(ObservableCollection<Shot> shots)
-        {
-            var now = DateTime.Now.Date;
-
-            Tooday = shots.Where(e => e.Date.Date == now).Sum(GetTotal);
+            TotalPerDay = shots.Where(e => e.Date.Date == day).Sum(GetTotal);
         }
 
         private static decimal GetTotal(int a, int b, int c, int d) => (decimal)(a * 0.33 + b * 0.5 + c * 1.0 + d * 1.5);
 
         private static decimal GetTotal(Shot s) => (decimal)(s.ThirdLitterCount * 0.33 + s.HalfLitterCount * 0.5 + s.OneLitterCount * 1.0 + s.OneAndHalfLitterCount * 1.5);
+
+        
     }
 }
