@@ -9,10 +9,10 @@ namespace maui.boozer
         private readonly IDataStorageService _dataStorage;
         private readonly IFileManagerService _fileManagerService;
 
-        private string _storageFile = "kotlin.json";
-        private string _storageFilePath => Path.Combine(FileSystem.AppDataDirectory, _storageFile);
-        private string _syncFilePath => Path.Combine(FileSystem.AppDataDirectory, "sync.json");
-        private DateTime _currentDate = DateTime.Now;
+        private static string _storageFile = "kotlin.json";
+        private static string _storageFilePath => Path.Combine(FileSystem.AppDataDirectory, _storageFile);
+        private static string _syncFilePath => Path.Combine(FileSystem.AppDataDirectory, "sync.json");
+        private DateTime _currentDate = DateTime.Now.Date;
 
         public static readonly BindableProperty TotalPerDayProperty = BindableProperty.Create(nameof(TotalPerDay), typeof(decimal), typeof(MainPage));
         public decimal TotalPerDay
@@ -84,7 +84,7 @@ namespace maui.boozer
             ShotsCollection.Add(item);
             OnDateSelectedImpl(_currentDate);
 
-            UpdateTotalPerDayProperties(ShotsCollection);
+            UpdateTotalPerDayProperties(ShotsCollection, _currentDate);
 
             try
             {
@@ -116,21 +116,24 @@ namespace maui.boozer
             ShotsCollection.Remove(item);
             FilteredShotsCollection.Remove(filteredItem);
 
-            UpdateTotalPerDayProperties(ShotsCollection);
+            UpdateTotalPerDayProperties(ShotsCollection, _currentDate);
 
             await _dataStorage.SaveShotsAsync(ShotsCollection, _storageFilePath);
         }
 
         private void OnLast10Clicked(object sender, EventArgs e)
         {
+            Apply.Text = "Внести";
             OnLast10ClickedImpl();
         }
         private void OnLast10ClickedImpl()
         {
+            _currentDate = DateTime.Now.Date;
+
             IEnumerable<Shot> filtered = ShotsCollection.OrderByDescending(e => e.Date).Take(10).OrderBy(e => e.Date);
             FilteredShotsCollection = new ObservableCollection<Shot>(filtered);
 
-            UpdateTotalPerDayProperties(FilteredShotsCollection);
+            UpdateTotalPerDayProperties(FilteredShotsCollection, _currentDate);
             OnPropertyChanged(nameof(FilteredShotsCollection));
         }
 
@@ -147,11 +150,10 @@ namespace maui.boozer
             OnPropertyChanged(nameof(FilteredShotsCollection));
         }
 
-        private void UpdateTotalPerDayProperties(ObservableCollection<Shot> shots, DateTime day = default)
+        private void UpdateTotalPerDayProperties(ObservableCollection<Shot> shots, DateTime day)
         {
-            if (day == default || day == DateTime.Now.Date)
+            if (day == DateTime.Now.Date)
             {
-                day = DateTime.Now.Date;
                 Day = "сегодня";
             }
             else
@@ -160,8 +162,6 @@ namespace maui.boozer
             }
 
             TotalPerDay = shots.Where(e => e.Date.Date == day).Sum(GetTotal);
-
-            _currentDate = day;
         }
 
         private async Task SyncAssetToLocalStorageIfNeeded()
