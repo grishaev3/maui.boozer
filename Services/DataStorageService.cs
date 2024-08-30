@@ -6,6 +6,8 @@ namespace maui.boozer.Services
 {
     public interface IDataStorageService
     {
+        Task<ObservableCollection<Shot>> LoadMauiAssetAsync(string fileName);
+
         Task<ObservableCollection<Shot>> LoadShotsAsync(string filePath);
 
         Task SaveShotsAsync(ObservableCollection<Shot> shots, string filePath);
@@ -13,6 +15,23 @@ namespace maui.boozer.Services
 
     public class DataStorageService : IDataStorageService
     {
+        public async Task<ObservableCollection<Shot>> LoadMauiAssetAsync(string fileName)
+        {
+            using var stream = await FileSystem.OpenAppPackageFileAsync(fileName);
+            using var reader = new StreamReader(stream);
+
+            var jsonString = reader.ReadToEnd();
+
+            var (result, ex) = DeserializeImpl(jsonString);
+
+            if (ex != null)
+            {
+                throw ex;
+            }
+
+            return result;
+        }
+
         public async Task<ObservableCollection<Shot>> LoadShotsAsync(string filePath)
         {
             if (!File.Exists(filePath))
@@ -23,15 +42,26 @@ namespace maui.boozer.Services
             // C:\Users\{current_user}\AppData\Local\Packages\com.companyname.maui.boozer_9zz4h110yvjzm\LocalState\shots.json
             string jsonString = await File.ReadAllTextAsync(filePath);
 
+            var (result, ex) = DeserializeImpl(jsonString);
+
+            if (ex != null)
+            {
+                File.Delete(filePath);
+            }
+
+            return result;
+        }
+
+        private static (ObservableCollection<Shot>, Exception?) DeserializeImpl(string jsonString)
+        {
             ObservableCollection<Shot>? result = null;
             try
             {
                 result = JsonSerializer.Deserialize<ObservableCollection<Shot>>(jsonString);
             }
-            catch
+            catch (Exception ex)
             {
-                File.Delete(filePath);
-                return [];
+                return ([], ex);
             }
 
             if (result == null)
@@ -40,7 +70,7 @@ namespace maui.boozer.Services
             }
             else
             {
-                return new ObservableCollection<Shot>(result);
+                return (new ObservableCollection<Shot>(result), null);
             }
         }
 

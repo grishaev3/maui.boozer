@@ -6,10 +6,13 @@ namespace maui.boozer
 {
     public partial class MainPage : ContentPage
     {
-        private const string _storageFileName = "shots.json";
-        private string _storagePath => Path.Combine(FileSystem.AppDataDirectory, _storageFileName);
-
         private readonly IDataStorageService _dataStorage;
+
+        //private const string _storageFileName = "shots.json";
+        //private string _storagePath => Path.Combine(FileSystem.AppDataDirectory, _storageFileName);
+
+        private const string _storageFileName = "kotlin.json";
+        private DateTime _currentDate = DateTime.Now;
 
         public static readonly BindableProperty TotalPerDayProperty = BindableProperty.Create(nameof(TotalPerDay), typeof(decimal), typeof(MainPage));
         public decimal TotalPerDay
@@ -40,7 +43,7 @@ namespace maui.boozer
 
         private async void LoadData()
         {
-            ShotsCollection = await _dataStorage.LoadShotsAsync(_storagePath);
+            ShotsCollection = await _dataStorage.LoadMauiAssetAsync(_storageFileName);
 
             OnLast10ClickedImpl();
 
@@ -57,22 +60,31 @@ namespace maui.boozer
                 return;
             }
 
+            if (_currentDate != DateTime.Now.Date)
+            {
+                bool answer = await DisplayAlert("", $"Точно вносим за {_currentDate}", "Да", "Нет");
+                if (!answer)
+                {
+                    return;
+                }
+            }
+
             Shot item = new()
             {
-                Date = DateTime.Now,
-                ThirdLitterCount = A.Value,
-                HalfLitterCount = B.Value,
-                OneLitterCount = C.Value,
-                OneAndHalfLitterCount = D.Value
+                Date = _currentDate,
+                ThirdLiterCount = A.Value,
+                HalfLiterCount = B.Value,
+                OneLiterCount = C.Value,
+                OneAndHalfLiterCount = D.Value
             };
             ShotsCollection.Add(item);
-            OnDateSelectedImpl(DateTime.Now.Date);
+            OnDateSelectedImpl(_currentDate);
 
             UpdateTotalPerDayProperties(ShotsCollection);
 
             try
             {
-                await _dataStorage.SaveShotsAsync(ShotsCollection, _storagePath);
+                await _dataStorage.SaveShotsAsync(ShotsCollection, _storageFileName);
 
                 ((Button)sender).Text = $"Внесено {value} л.";
 
@@ -87,7 +99,6 @@ namespace maui.boozer
         private async void OnDeleteClicked(object sender, EventArgs e)
         {
             bool answer = await DisplayAlert("", "Точно удаляем?", "Да", "Нет");
-
             if (!answer)
             {
                 return;
@@ -103,7 +114,7 @@ namespace maui.boozer
 
             UpdateTotalPerDayProperties(ShotsCollection);
 
-            await _dataStorage.SaveShotsAsync(ShotsCollection, _storagePath);
+            await _dataStorage.SaveShotsAsync(ShotsCollection, _storageFileName);
         }
 
         private void OnLast10Clicked(object sender, EventArgs e)
@@ -112,7 +123,7 @@ namespace maui.boozer
         }
         private void OnLast10ClickedImpl()
         {
-            IEnumerable<Shot> filtered = ShotsCollection.Take(10);
+            IEnumerable<Shot> filtered = ShotsCollection.OrderByDescending(e => e.Date).Take(10).OrderBy(e => e.Date);
             FilteredShotsCollection = new ObservableCollection<Shot>(filtered);
 
             UpdateTotalPerDayProperties(FilteredShotsCollection);
@@ -136,7 +147,7 @@ namespace maui.boozer
         {
             if (day == default || day == DateTime.Now.Date)
             {
-                day = DateTime.Now.Date;
+                _currentDate = day = DateTime.Now.Date;
                 Day = "сегодня";
             }
             else
@@ -149,7 +160,7 @@ namespace maui.boozer
 
         private static decimal GetTotal(int a, int b, int c, int d) => (decimal)(a * 0.33 + b * 0.5 + c * 1.0 + d * 1.5);
 
-        private static decimal GetTotal(Shot s) => (decimal)(s.ThirdLitterCount * 0.33 + s.HalfLitterCount * 0.5 + s.OneLitterCount * 1.0 + s.OneAndHalfLitterCount * 1.5);
+        private static decimal GetTotal(Shot s) => (decimal)(s.ThirdLiterCount * 0.33 + s.HalfLiterCount * 0.5 + s.OneLiterCount * 1.0 + s.OneAndHalfLiterCount * 1.5);
 
         
     }

@@ -6,22 +6,22 @@ namespace maui.boozer.Model
     {
         public DateTime Date { get; set; }
 
-        public int ThirdLitterCount { get; set; }
-        public int HalfLitterCount { get; set; }
-        public int OneLitterCount { get; set; }
-        public int OneAndHalfLitterCount { get; set; }
+        public int ThirdLiterCount { get; set; }
+        public int HalfLiterCount { get; set; }
+        public int OneLiterCount { get; set; }
+        public int OneAndHalfLiterCount { get; set; }
 
         [JsonIgnore]
         public int ID => Date.GetHashCode();
 
         [JsonIgnore]
-        public string ThirdLitter => ThirdLitterCount == default ? _e : $"0.3{_coeff(ThirdLitterCount)}";
+        public string ThirdLitter => ThirdLiterCount == default ? _e : $"0.3{_coeff(ThirdLiterCount)}";
         [JsonIgnore]
-        public string HalfLitter => HalfLitterCount == default ? _e : $"0.5{_coeff(HalfLitterCount)}";
+        public string HalfLitter => HalfLiterCount == default ? _e : $"0.5{_coeff(HalfLiterCount)}";
         [JsonIgnore]
-        public string OneLitter => OneLitterCount == default ? _e : $"1.0{_coeff(OneLitterCount)}";
+        public string OneLitter => OneLiterCount == default ? _e : $"1.0{_coeff(OneLiterCount)}";
         [JsonIgnore]
-        public string OneAndHalfLitter => OneAndHalfLitterCount == default ? _e : $"1.5{_coeff(OneAndHalfLitterCount)}";
+        public string OneAndHalfLitter => OneAndHalfLiterCount == default ? _e : $"1.5{_coeff(OneAndHalfLiterCount)}";
 
         private const string _e = "-";
 
