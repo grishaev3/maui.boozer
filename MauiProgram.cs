@@ -52,6 +52,7 @@ namespace maui.boozer
             });
 #endif     
             builder.Services.AddSingleton<IDataStorageService, DataStorageService>();
+            builder.Services.AddSingleton<IFileManagerService, FileManagerService>();
             builder.Services.AddSingleton<MainPage>();
 
             return builder.Build();

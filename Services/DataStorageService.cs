@@ -6,10 +6,12 @@ namespace maui.boozer.Services
 {
     public interface IDataStorageService
     {
-        Task<ObservableCollection<Shot>> LoadMauiAssetAsync(string fileName);
+        //Task<ObservableCollection<Shot>> LoadMauiAssetAsync(string fileName);
+
+        Task<SyncStatus> LoadSyncStatusAsync(string filePath);
+        Task SaveSyncStatusAsync(SyncStatus status, string filePath);
 
         Task<ObservableCollection<Shot>> LoadShotsAsync(string filePath);
-
         Task SaveShotsAsync(ObservableCollection<Shot> shots, string filePath);
     }
 
@@ -42,12 +44,7 @@ namespace maui.boozer.Services
             // C:\Users\{current_user}\AppData\Local\Packages\com.companyname.maui.boozer_9zz4h110yvjzm\LocalState\shots.json
             string jsonString = await File.ReadAllTextAsync(filePath);
 
-            var (result, ex) = DeserializeImpl(jsonString);
-
-            if (ex != null)
-            {
-                File.Delete(filePath);
-            }
+            var (result, _) = DeserializeImpl(jsonString);
 
             return result;
         }
@@ -77,6 +74,33 @@ namespace maui.boozer.Services
         public async Task SaveShotsAsync(ObservableCollection<Shot> shots, string filePath)
         {
             string jsonString = JsonSerializer.Serialize(shots);
+
+            await File.WriteAllTextAsync(filePath, jsonString);
+        }
+
+        public async Task<SyncStatus> LoadSyncStatusAsync(string filePath)
+        {
+            var defaultStatus = new SyncStatus { IsSynchronized = false };
+            if (!File.Exists(filePath))
+            {
+                return await Task.FromResult(defaultStatus);
+            }
+
+            string jsonString = await File.ReadAllTextAsync(filePath);
+
+            try
+            {
+                return JsonSerializer.Deserialize<SyncStatus>(jsonString);
+            }
+            catch 
+            {
+                return await Task.FromResult(defaultStatus);
+            }
+        }
+
+        public async Task SaveSyncStatusAsync(SyncStatus status, string filePath)
+        {
+            string jsonString = JsonSerializer.Serialize(status);
 
             await File.WriteAllTextAsync(filePath, jsonString);
         }

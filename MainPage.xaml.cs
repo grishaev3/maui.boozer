@@ -7,11 +7,11 @@ namespace maui.boozer
     public partial class MainPage : ContentPage
     {
         private readonly IDataStorageService _dataStorage;
+        private readonly IFileManagerService _fileManagerService;
 
-        //private const string _storageFileName = "shots.json";
-        //private string _storagePath => Path.Combine(FileSystem.AppDataDirectory, _storageFileName);
-
-        private const string _storageFileName = "kotlin.json";
+        private string _storageFile = "kotlin.json";
+        private string _storageFilePath => Path.Combine(FileSystem.AppDataDirectory, _storageFile);
+        private string _syncFilePath => Path.Combine(FileSystem.AppDataDirectory, "sync.json");
         private DateTime _currentDate = DateTime.Now;
 
         public static readonly BindableProperty TotalPerDayProperty = BindableProperty.Create(nameof(TotalPerDay), typeof(decimal), typeof(MainPage));
@@ -32,23 +32,27 @@ namespace maui.boozer
 
         public ObservableCollection<Shot> FilteredShotsCollection { get; private set; }
 
-        public MainPage(IDataStorageService dataStorage)
+        public MainPage(IDataStorageService dataStorage, IFileManagerService fileManagerService)
         {
             InitializeComponent();
 
             _dataStorage = dataStorage;
+            _fileManagerService = fileManagerService;
 
             LoadData();
         }
 
         private async void LoadData()
         {
-            ShotsCollection = await _dataStorage.LoadMauiAssetAsync(_storageFileName);
+            await SyncAssetToLocalStorageIfNeeded();
+
+            ShotsCollection = await _dataStorage.LoadShotsAsync(_storageFilePath);
 
             OnLast10ClickedImpl();
 
             BindingContext = this;
         }
+
 
         private async void OnApplyClicked(object sender, EventArgs e)
         {
@@ -62,7 +66,7 @@ namespace maui.boozer
 
             if (_currentDate != DateTime.Now.Date)
             {
-                bool answer = await DisplayAlert("", $"Точно вносим за {_currentDate}", "Да", "Нет");
+                bool answer = await DisplayAlert("", $"Точно вносим за {_currentDate}?", "Да", "Нет");
                 if (!answer)
                 {
                     return;
@@ -84,7 +88,7 @@ namespace maui.boozer
 
             try
             {
-                await _dataStorage.SaveShotsAsync(ShotsCollection, _storageFileName);
+                await _dataStorage.SaveShotsAsync(ShotsCollection, _storageFilePath);
 
                 ((Button)sender).Text = $"Внесено {value} л.";
 
@@ -114,7 +118,7 @@ namespace maui.boozer
 
             UpdateTotalPerDayProperties(ShotsCollection);
 
-            await _dataStorage.SaveShotsAsync(ShotsCollection, _storageFileName);
+            await _dataStorage.SaveShotsAsync(ShotsCollection, _storageFilePath);
         }
 
         private void OnLast10Clicked(object sender, EventArgs e)
@@ -147,7 +151,7 @@ namespace maui.boozer
         {
             if (day == default || day == DateTime.Now.Date)
             {
-                _currentDate = day = DateTime.Now.Date;
+                day = DateTime.Now.Date;
                 Day = "сегодня";
             }
             else
@@ -156,6 +160,22 @@ namespace maui.boozer
             }
 
             TotalPerDay = shots.Where(e => e.Date.Date == day).Sum(GetTotal);
+
+            _currentDate = day;
+        }
+
+        private async Task SyncAssetToLocalStorageIfNeeded()
+        {
+            var status = await _dataStorage.LoadSyncStatusAsync(_syncFilePath);
+            if (status?.IsSynchronized == false)
+            {
+                await _fileManagerService.CopyFileToAppDataDirectory(_storageFile);
+                await _dataStorage.SaveSyncStatusAsync(new SyncStatus
+                {
+                    IsSynchronized = true,
+                    SynchronizedAt = DateTime.Now
+                }, _syncFilePath);
+            }
         }
 
         private static decimal GetTotal(int a, int b, int c, int d) => (decimal)(a * 0.33 + b * 0.5 + c * 1.0 + d * 1.5);
