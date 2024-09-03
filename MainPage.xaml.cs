@@ -28,6 +28,8 @@ namespace maui.boozer
             set  => SetValue(TotalDayProperty, value);
         }
 
+        public string Version { get; set; }
+
         public ObservableCollection<Shot> ShotsCollection { get; private set; }
 
         public ObservableCollection<Shot> FilteredShotsCollection { get; private set; }
@@ -38,6 +40,8 @@ namespace maui.boozer
 
             _dataStorage = dataStorage;
             _fileManagerService = fileManagerService;
+
+            Version = VersionTracking.Default.CurrentVersion.ToString();
 
             LoadData();
         }

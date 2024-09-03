@@ -1,4 +1,5 @@
 ﻿using maui.boozer.Services;
+using Maui.Android.InAppUpdates;
 using Microsoft.Extensions.Logging;
 using Microsoft.Maui.LifecycleEvents;
 #if WINDOWS
@@ -16,6 +17,7 @@ namespace maui.boozer
             var builder = MauiApp.CreateBuilder();
             builder
                 .UseMauiApp<App>()
+                .UseAndroidInAppUpdates()
                 .ConfigureFonts(fonts =>
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
@@ -50,7 +52,7 @@ namespace maui.boozer
                     });
                 });
             });
-#endif     
+#endif
             builder.Services.AddSingleton<IDataStorageService, DataStorageService>();
             builder.Services.AddSingleton<IFileManagerService, FileManagerService>();
             builder.Services.AddSingleton<MainPage>();
