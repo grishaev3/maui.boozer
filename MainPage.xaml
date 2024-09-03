@@ -5,16 +5,10 @@
              x:Class="maui.boozer.MainPage">
 
     <ScrollView>
-        <VerticalStackLayout
-            Padding="10,0"
-            Spacing="20">
-            <Image
-                Source="title.jpg"
-                HeightRequest="185"
-                Aspect="AspectFit"
-                SemanticProperties.Description="" />
-
-            <!--<Label WidthRequest="200" Text="{Binding TotalPerDay, StringFormat='Выпито за {0}: {1}~'}" BackgroundColor="Red" />-->
+        <VerticalStackLayout Padding="10,0" Spacing="20">
+            <Label HorizontalOptions="Start" Text="{Binding Version, StringFormat='ver. {0}' }"/>
+            
+            <Image Source="title.jpg" HeightRequest="185" Aspect="AspectFit" SemanticProperties.Description="" />
 
             <Label HorizontalTextAlignment="Center" BackgroundColor="Red">
                 <Label.Text>
@@ -24,17 +18,6 @@
                     </MultiBinding>
                 </Label.Text>
             </Label>
-
-            <!--<Label
-                Text="Hello, World!"
-                Style="{StaticResource Headline}"
-                SemanticProperties.HeadingLevel="Level1" />-->
-
-            <!--<Label
-                Text="Welcome to &#10;.NET Multi-platform App UI"
-                Style="{StaticResource SubHeadline}"
-                SemanticProperties.HeadingLevel="Level2"
-                SemanticProperties.Description="Welcome to dot net Multi platform App U I" />-->
 
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -73,12 +56,14 @@
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <StackLayout Orientation="Horizontal" Spacing="5" Padding="5" HorizontalOptions="CenterAndExpand" >
-                            <Label WidthRequest="120" Text="{Binding Date, StringFormat='{0:dd.MM.yy HH:mm}'}" BackgroundColor="Blue" TextColor="Wheat" VerticalTextAlignment="Center" Padding="5,0,0,0"  />
-                            <Label WidthRequest="44" Text="{Binding ThirdLitter}" BackgroundColor="ForestGreen" TextColor="Wheat" VerticalTextAlignment="Center" HorizontalTextAlignment="Center"/>
-                            <Label WidthRequest="44" Text="{Binding HalfLitter}" BackgroundColor="ForestGreen" TextColor="Wheat" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" />
-                            <Label WidthRequest="44" Text="{Binding OneLitter}" BackgroundColor="ForestGreen" TextColor="Wheat" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" />
-                            <Label WidthRequest="44" Text="{Binding OneAndHalfLitter}" BackgroundColor="ForestGreen" TextColor="Wheat" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" />
-                            <Button Text="X" TextColor="Wheat" BackgroundColor="Blue"  Clicked="OnDeleteClicked" BorderWidth="1"></Button>
+                            <Label WidthRequest="120" Text="{Binding Date, StringFormat='{0:dd.MM.yy HH:mm}'}" VerticalTextAlignment="Center" Padding="5,0,0,0"  />
+                            <Border></Border>
+                            <Label WidthRequest="44" Text="{Binding ThirdLitter}" VerticalTextAlignment="Center" HorizontalTextAlignment="Center"/>
+                            <Label WidthRequest="44" Text="{Binding HalfLitter}"  VerticalTextAlignment="Center" HorizontalTextAlignment="Center" />
+                            <Label WidthRequest="44" Text="{Binding OneLitter}"  VerticalTextAlignment="Center" HorizontalTextAlignment="Center" />
+                            <Label WidthRequest="44" Text="{Binding OneAndHalfLitter}"  VerticalTextAlignment="Center" HorizontalTextAlignment="Center" />
+                            <Border></Border>
+                            <Button Text="X" TextColor="Wheat" BackgroundColor="#512BD4"  Clicked="OnDeleteClicked" BorderWidth="1"></Button>
                         </StackLayout>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
@@ -88,6 +73,8 @@
                 <DatePicker MinimumDate="01/01/2024" DateSelected="OnDateSelected" HorizontalOptions="Center" />
                 <Button Text="Последние 10" Clicked="OnLast10Clicked"></Button>
             </HorizontalStackLayout>
+
+            
 
         </VerticalStackLayout>
     </ScrollView>
