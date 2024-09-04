@@ -41,7 +41,7 @@ namespace maui.boozer.Services
                 return [];
             }
 
-            // C:\Users\{current_user}\AppData\Local\Packages\com.companyname.maui.boozer_9zz4h110yvjzm\LocalState\shots.json
+            // C:\Users\Sneg\AppData\Local\Packages\com.companyname.maui.boozer_9zz4h110yvjzm\LocalState\shots.json
             string jsonString = await File.ReadAllTextAsync(filePath);
 
             var (result, _) = DeserializeImpl(jsonString);

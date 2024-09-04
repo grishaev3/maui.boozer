@@ -12,7 +12,19 @@ namespace maui.boozer.Model
         public int OneAndHalfLiterCount { get; set; }
 
         [JsonIgnore]
-        public int ID => Date.GetHashCode();
+        public int ID
+        {
+            get
+            {
+                int hash = 23;
+                hash = hash * 31 + Date.GetHashCode();
+                hash = hash * 31 + ThirdLiterCount.GetHashCode();
+                hash = hash * 31 + HalfLiterCount.GetHashCode();
+                hash = hash * 31 + OneLiterCount.GetHashCode();
+                hash = hash * 31 + OneAndHalfLiterCount.GetHashCode();
+                return hash;
+            }
+        }
 
         [JsonIgnore]
         public string ThirdLitter => ThirdLiterCount == default ? _e : $"0.3{_coeff(ThirdLiterCount)}";

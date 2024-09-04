@@ -404,5 +404,54 @@
     "HalfLiterCount": 3,
     "OneLiterCount": 3,
     "OneAndHalfLiterCount": 0
+  },
+  {
+    "Date": "2024-08-31T00:00:00",
+    "ThirdLiterCount": 0,
+    "HalfLiterCount": 1,
+    "OneLiterCount": 0,
+    "OneAndHalfLiterCount": 0
+  },
+  {
+    "Date": "2024-08-31T00:00:00",
+    "ThirdLiterCount": 0,
+    "HalfLiterCount": 0,
+    "OneLiterCount": 1,
+    "OneAndHalfLiterCount": 0
+  },
+  {
+    "Date": "2024-08-31T00:00:00",
+    "ThirdLiterCount": 0,
+    "HalfLiterCount": 1,
+    "OneLiterCount": 0,
+    "OneAndHalfLiterCount": 0
+  },
+  {
+    "Date": "2024-08-31T00:00:00",
+    "ThirdLiterCount": 0,
+    "HalfLiterCount": 1,
+    "OneLiterCount": 0,
+    "OneAndHalfLiterCount": 0
+  },
+  {
+    "Date": "2024-08-31T00:00:00",
+    "ThirdLiterCount": 0,
+    "HalfLiterCount": 0,
+    "OneLiterCount": 2,
+    "OneAndHalfLiterCount": 0
+  },
+  {
+    "Date": "2024-08-31T00:00:00",
+    "ThirdLiterCount": 0,
+    "HalfLiterCount": 0,
+    "OneLiterCount": 0,
+    "OneAndHalfLiterCount": 1
+  },
+  {
+    "Date": "2024-08-31T00:00:00",
+    "ThirdLiterCount": 0,
+    "HalfLiterCount": 2,
+    "OneLiterCount": 0,
+    "OneAndHalfLiterCount": 0
   }
 ]

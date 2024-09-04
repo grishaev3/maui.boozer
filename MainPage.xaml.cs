@@ -79,7 +79,7 @@ namespace maui.boozer
 
             Shot item = new()
             {
-                Date = _currentDate,
+                Date = GetInsertedDate(),
                 ThirdLiterCount = A.Value,
                 HalfLiterCount = B.Value,
                 OneLiterCount = C.Value,
@@ -93,8 +93,6 @@ namespace maui.boozer
             try
             {
                 await _dataStorage.SaveShotsAsync(ShotsCollection, _storageFilePath);
-
-                ((Button)sender).Text = $"Внесено {value} л.";
 
                 A.Value = B.Value = C.Value = D.Value = 0;
             }
@@ -147,6 +145,8 @@ namespace maui.boozer
         }
         private void OnDateSelectedImpl(DateTime day)
         {
+            _currentDate = day.Date;
+
             IEnumerable<Shot> filtered = ShotsCollection.Where(p => p.Date.Date == day);
             FilteredShotsCollection = new ObservableCollection<Shot>(filtered);
 
@@ -186,6 +186,16 @@ namespace maui.boozer
 
         private static decimal GetTotal(Shot s) => (decimal)(s.ThirdLiterCount * 0.33 + s.HalfLiterCount * 0.5 + s.OneLiterCount * 1.0 + s.OneAndHalfLiterCount * 1.5);
 
-        
+        private DateTime GetInsertedDate()
+        {
+            if (_currentDate == DateTime.Now.Date)
+            {
+                return _currentDate.Add(DateTime.Now.TimeOfDay);
+            }
+            else
+            {
+                return _currentDate;
+            }
+        }
     }
 }
